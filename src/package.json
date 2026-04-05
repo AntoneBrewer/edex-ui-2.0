@@ -27,21 +27,21 @@
     "augmented-ui": "^1.1.2",
     "color": "3.2.1",
     "geolite2-redist": "^2.0.4",
-    "howler": "2.2.3",
+    "howler": "2.2.4",
     "maxmind": "4.3.2",
     "mime-types": "^2.1.33",
     "nanoid": "3.1.30",
     "node-pty": "0.10.1",
-    "pdfjs-dist": "2.11.338",
+    "pdfjs-dist": "^4.2.67",
     "pretty-bytes": "5.6.0",
     "shell-env": "3.0.1",
     "signale": "1.4.0",
-    "smoothie": "1.35.0",
-    "systeminformation": "5.9.7",
-    "tail": "2.2.4",
+    "smoothie": "1.36.1",
+    "systeminformation": "5.31.5",
+    "tail": "2.2.6",
     "username": "5.1.0",
     "which": "2.0.2",
-    "ws": "7.5.5",
+    "ws": "7.5.10",
     "xterm": "4.14.1",
     "xterm-addon-attach": "0.6.0",
     "xterm-addon-fit": "0.5.0",
@@ -49,6 +49,6 @@
     "xterm-addon-webgl": "^0.11.2"
   },
   "optionalDependencies": {
-    "osx-temperature-sensor": "1.0.7"
+    "osx-temperature-sensor": "1.0.8"
   }
 }
