@@ -44,9 +44,7 @@ jobs:
     - name: Run prebuild script
       run: npm run prebuild-linux
     - name: Build for x64 / ia32
-      run: ./node_modules/.bin/electron-builder build -l --x64 --ia32 --publish ${{ github.event_name == 'release' && 'always' || 'never' }}
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: ./node_modules/.bin/electron-builder build -l --x64 --ia32 --publish never
     - uses: actions/upload-artifact@v2
       with:
         name: Linux-AppImages
@@ -93,9 +91,7 @@ jobs:
     - name: Build for arm32v7 (aka armv7l)
       uses: docker://arm32v7/node:14-buster
       with:
-        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --armv7l --publish ${{ github.event_name == 'release' && 'always' || 'never' }}"
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --armv7l --publish never"
     - uses: actions/upload-artifact@v2
       with:
         name: Linux-arm32-AppImage
@@ -142,9 +138,7 @@ jobs:
     - name: Build for arm64 (aka arm64v8)
       uses: docker://arm64v8/node:14-buster
       with:
-        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --arm64 --publish ${{ github.event_name == 'release' && 'always' || 'never' }}"
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --arm64 --publish never"
     - uses: actions/upload-artifact@v2
       with:
         name: Linux-arm64-AppImage
@@ -191,9 +185,7 @@ jobs:
     - name: npm install
       run: npm install
     - name: npm build
-      run: npm run build-windows -- --publish ${{ github.event_name == 'release' && 'always' || 'never' }}
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm run build-windows -- --publish never
     - uses: actions/upload-artifact@v2
       with:
         name: Windows-Installer
@@ -230,11 +222,82 @@ jobs:
     - name: npm install
       run: npm install
     - name: npm build
-      run: npm run build-darwin -- --publish ${{ github.event_name == 'release' && 'always' || 'never' }}
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npm run build-darwin -- --publish never
     - uses: actions/upload-artifact@v2
       with:
         name: MacOS-Image
         path: dist/*.pkg
         if-no-files-found: error
+
+  publish-to-release:
+    name: Publish binaries to GitHub Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    needs:
+      - build-linux
+      - build-linux-arm32
+      - build-linux-arm64
+      - build-windows
+      - build-darwin
+    steps:
+      - name: Download Linux x64/ia32 AppImages
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-AppImages
+          path: release-assets
+      - name: Download Linux x64/ia32 deb packages
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-deb-packages
+          path: release-assets
+      - name: Download Linux x64/ia32 rpm packages
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-rpm-packages
+          path: release-assets
+      - name: Download Linux arm32 AppImage
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-arm32-AppImage
+          path: release-assets
+      - name: Download Linux arm32 deb package
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-arm32-deb-package
+          path: release-assets
+      - name: Download Linux arm32 rpm package
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-arm32-rpm-package
+          path: release-assets
+      - name: Download Linux arm64 AppImage
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-arm64-AppImage
+          path: release-assets
+      - name: Download Linux arm64 deb package
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-arm64-deb-package
+          path: release-assets
+      - name: Download Linux arm64 rpm package
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux-arm64-rpm-package
+          path: release-assets
+      - name: Download Windows MSI installer
+        uses: actions/download-artifact@v2
+        with:
+          name: Windows-Installer
+          path: release-assets
+      - name: Download macOS pkg installers
+        uses: actions/download-artifact@v2
+        with:
+          name: MacOS-Image
+          path: release-assets
+      - name: Upload all binaries to GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release-assets/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
