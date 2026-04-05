@@ -170,7 +170,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Cache node modules
-      uses: actions/cache@v2
+      uses: actions/cache@v7
       env:
         cache-name: cache-node-modules
       with:
@@ -178,7 +178,7 @@ jobs:
         path: ~/.npm
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Cache Electron binaries
-      uses: actions/cache@v2
+      uses: actions/cache@v7
       env:
         cache-name: cache-electron-bins
       with:
@@ -187,9 +187,9 @@ jobs:
         path: ~/Library/Caches/electron
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
-        node-version: 14
+        node-version: 27
     - name: Setup npm
       run: sudo npm i -g npm@7
     - name: npm install
@@ -198,7 +198,7 @@ jobs:
       run: npm run build-darwin
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v7
       with:
         name: MacOS-Image
         path: dist/*.dmg
