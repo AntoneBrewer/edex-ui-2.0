@@ -56,7 +56,9 @@
     "artifactName": "eDEX-UI-${os}-${arch}.${ext}",
     "linux": {
       "target": [
-        "AppImage"
+        "AppImage",
+        "deb",
+        "rpm"
       ],
       "category": "System",
       "icon": "media/linuxIcons"
@@ -64,10 +66,16 @@
     "appImage": {
       "artifactName": "eDEX-UI-Linux-${arch}.AppImage"
     },
+    "deb": {
+      "artifactName": "eDEX-UI-Linux-${arch}.deb"
+    },
+    "rpm": {
+      "artifactName": "eDEX-UI-Linux-${arch}.rpm"
+    },
     "mac": {
       "target": [
         {
-          "target": "dmg",
+          "target": "pkg",
           "arch": [
             "x64",
             "arm64"
@@ -77,13 +85,14 @@
       "category": "public.app-category.utilities",
       "icon": "media/icon.icns"
     },
-    "dmg": {
-      "artifactName": "eDEX-UI-macOS-${arch}.dmg"
+    "pkg": {
+      "artifactName": "eDEX-UI-macOS-${arch}.pkg",
+      "installLocation": "/Applications"
     },
     "win": {
       "target": [
         {
-          "target": "nsis",
+          "target": "msi",
           "arch": [
             "x64",
             "ia32"
@@ -92,11 +101,10 @@
       ],
       "icon": "media/icon.ico"
     },
-    "nsis": {
-      "artifactName": "eDEX-UI-Windows-${arch}.exe",
+    "msi": {
+      "artifactName": "eDEX-UI-Windows-${arch}.msi",
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "deleteAppDataOnUninstall": true
+      "perMachine": true
     }
   },
   "dependencies": {

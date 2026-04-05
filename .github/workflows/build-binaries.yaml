@@ -52,6 +52,16 @@ jobs:
         name: Linux-AppImages
         path: dist/*.AppImage
         if-no-files-found: error
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Linux-deb-packages
+        path: dist/*.deb
+        if-no-files-found: error
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Linux-rpm-packages
+        path: dist/*.rpm
+        if-no-files-found: error
 
   build-linux-arm32:
     runs-on: ubuntu-latest
@@ -90,6 +100,16 @@ jobs:
       with:
         name: Linux-arm32-AppImage
         path: dist/*.AppImage
+        if-no-files-found: error
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Linux-arm32-deb-package
+        path: dist/*.deb
+        if-no-files-found: error
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Linux-arm32-rpm-package
+        path: dist/*.rpm
         if-no-files-found: error
 
   build-linux-arm64:
@@ -130,6 +150,16 @@ jobs:
         name: Linux-arm64-AppImage
         path: dist/*.AppImage
         if-no-files-found: error
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Linux-arm64-deb-package
+        path: dist/*.deb
+        if-no-files-found: error
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Linux-arm64-rpm-package
+        path: dist/*.rpm
+        if-no-files-found: error
 
   build-windows:
     runs-on: windows-latest
@@ -167,7 +197,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: Windows-Installer
-        path: dist/*.exe
+        path: dist/*.msi
         if-no-files-found: error
 
   build-darwin:
@@ -206,5 +236,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: MacOS-Image
-        path: dist/*.dmg
+        path: dist/*.pkg
         if-no-files-found: error
