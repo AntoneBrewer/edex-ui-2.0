@@ -92,14 +92,25 @@
     "win": {
       "target": [
         {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
           "target": "msi",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ],
       "icon": "media/icon.ico"
+    },
+    "nsis": {
+      "artifactName": "eDEX-UI-Windows-${arch}-Setup.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false
     },
     "msi": {
       "artifactName": "eDEX-UI-Windows-${arch}.msi",
