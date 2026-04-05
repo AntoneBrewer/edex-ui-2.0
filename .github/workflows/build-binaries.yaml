@@ -1,6 +1,11 @@
 name: Build packaged binaries
 
-on: [push, pull_request, create]
+on:
+  push:
+  pull_request:
+  create:
+  release:
+    types: [published]
 
 jobs:
   build-linux:
@@ -39,7 +44,7 @@ jobs:
     - name: Run prebuild script
       run: npm run prebuild-linux
     - name: Build for x64 / ia32
-      run: ./node_modules/.bin/electron-builder build -l --x64 --ia32
+      run: ./node_modules/.bin/electron-builder build -l --x64 --ia32 --publish ${{ github.event_name == 'release' && 'always' || 'never' }}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v2
@@ -78,7 +83,7 @@ jobs:
     - name: Build for arm32v7 (aka armv7l)
       uses: docker://arm32v7/node:14-buster
       with:
-        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --armv7l"
+        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --armv7l --publish ${{ github.event_name == 'release' && 'always' || 'never' }}"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v2
@@ -117,7 +122,7 @@ jobs:
     - name: Build for arm64 (aka arm64v8)
       uses: docker://arm64v8/node:14-buster
       with:
-        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --arm64"
+        args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --arm64 --publish ${{ github.event_name == 'release' && 'always' || 'never' }}"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v2
@@ -156,7 +161,7 @@ jobs:
     - name: npm install
       run: npm install
     - name: npm build
-      run: npm run build-windows
+      run: npm run build-windows -- --publish ${{ github.event_name == 'release' && 'always' || 'never' }}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v2
@@ -195,7 +200,7 @@ jobs:
     - name: npm install
       run: npm install
     - name: npm build
-      run: npm run build-darwin
+      run: npm run build-darwin -- --publish ${{ github.event_name == 'release' && 'always' || 'never' }}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v7
