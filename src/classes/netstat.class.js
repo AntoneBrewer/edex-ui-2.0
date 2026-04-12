@@ -47,11 +47,9 @@ class Netstat {
         };
         let maxmind = require("maxmind");
         const geoIPcachePath = require("path").join(require("@electron/remote").app.getPath("userData"), "geoIPcache");
-        import("geolite2-redist").then(({ downloadDbs, open }) => {
-            return downloadDbs({ path: geoIPcachePath }).then(() =>
-                open('GeoLite2-City', path => maxmind.open(path), geoIPcachePath)
-            );
-        }).then(lookup => {
+        import("geolite2-redist").then(({ open }) =>
+            open('GeoLite2-City', path => maxmind.open(path), geoIPcachePath)
+        ).then(lookup => {
             this.geoLookup = lookup;
             this.lastconn.finished = true;
         }).catch(e => { throw e; });
