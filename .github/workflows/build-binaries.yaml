@@ -11,9 +11,9 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Cache node modules
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-node-modules
       with:
@@ -21,7 +21,7 @@ jobs:
         path: ~/.npm
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Cache Electron binaries
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-electron-bins
       with:
@@ -34,9 +34,9 @@ jobs:
         sudo apt update
         sudo apt install libc6-dev-i386 gcc-multilib g++-multilib
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: 14
+        node-version: 16
     - name: Setup npm
       run: sudo npm i -g npm@7
     - name: Install build deps
@@ -45,17 +45,17 @@ jobs:
       run: npm run prebuild-linux
     - name: Build for x64 / ia32
       run: ./node_modules/.bin/electron-builder build -l --x64 --ia32 --publish never
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-AppImages
         path: dist/*.AppImage
         if-no-files-found: error
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-deb-packages
         path: dist/*.deb
         if-no-files-found: error
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-rpm-packages
         path: dist/*.rpm
@@ -64,13 +64,13 @@ jobs:
   build-linux-arm32:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm
     - name: Cache node modules
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-node-modules
       with:
@@ -78,7 +78,7 @@ jobs:
         path: ~/.npm
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Cache Electron binaries
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-electron-bins
       with:
@@ -89,20 +89,20 @@ jobs:
     - name: Run prebuild outside of QEMU emulator
       run: sudo npm i -g npm@7 && npm install && rsync -a --info=progress2 src/ prebuild-src --exclude node_modules && node prebuild-minify.js && rm -rf node_modules
     - name: Build for arm32v7 (aka armv7l)
-      uses: docker://arm32v7/node:14-buster
+      uses: docker://arm32v7/node:16-bullseye
       with:
         args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --armv7l --publish never"
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-arm32-AppImage
         path: dist/*.AppImage
         if-no-files-found: error
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-arm32-deb-package
         path: dist/*.deb
         if-no-files-found: error
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-arm32-rpm-package
         path: dist/*.rpm
@@ -111,13 +111,13 @@ jobs:
   build-linux-arm64:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
     - name: Cache node modules
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-node-modules
       with:
@@ -125,7 +125,7 @@ jobs:
         path: ~/.npm
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Cache Electron binaries
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-electron-bins
       with:
@@ -136,20 +136,20 @@ jobs:
     - name: Run prebuild outside of QEMU emulator
       run: sudo npm i -g npm@7 && npm install && rsync -a --info=progress2 src/ prebuild-src --exclude node_modules && node prebuild-minify.js && rm -rf node_modules
     - name: Build for arm64 (aka arm64v8)
-      uses: docker://arm64v8/node:14-buster
+      uses: docker://arm64v8/node:16-bullseye
       with:
         args: bash -c "npm i -g npm@7 && npm install && ./node_modules/.bin/electron-builder build -l --arm64 --publish never"
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-arm64-AppImage
         path: dist/*.AppImage
         if-no-files-found: error
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-arm64-deb-package
         path: dist/*.deb
         if-no-files-found: error
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Linux-arm64-rpm-package
         path: dist/*.rpm
@@ -158,17 +158,18 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
     - name: Get npm cache directory
       id: npm-cache
+      shell: bash
       run: |
-        echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@v2
+        echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+    - uses: actions/cache@v4
       with:
         path: ${{ steps.npm-cache.outputs.dir }}
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
     - name: Cache Electron binaries
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-electron-bins
       with:
@@ -177,16 +178,16 @@ jobs:
         path: ~/AppData/Local/electron/Cache
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: 14
+        node-version: 16
     - name: Setup npm
       run: npm i -g npm@7
     - name: npm install
       run: npm install
     - name: npm build
       run: npm run build-windows -- --publish never
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: Windows-Installer
         path: dist/*.msi
@@ -195,9 +196,9 @@ jobs:
   build-darwin:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
     - name: Cache node modules
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-node-modules
       with:
@@ -205,7 +206,7 @@ jobs:
         path: ~/.npm
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Cache Electron binaries
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-electron-bins
       with:
@@ -214,16 +215,16 @@ jobs:
         path: ~/Library/Caches/electron
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
     - name: Setup Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: 14
+        node-version: 16
     - name: Setup npm
       run: sudo npm i -g npm@7
     - name: npm install
       run: npm install
     - name: npm build
       run: npm run build-darwin -- --publish never
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: MacOS-Image
         path: dist/*.pkg
@@ -241,62 +242,62 @@ jobs:
       - build-darwin
     steps:
       - name: Download Linux x64/ia32 AppImages
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-AppImages
           path: release-assets
       - name: Download Linux x64/ia32 deb packages
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-deb-packages
           path: release-assets
       - name: Download Linux x64/ia32 rpm packages
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-rpm-packages
           path: release-assets
       - name: Download Linux arm32 AppImage
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-arm32-AppImage
           path: release-assets
       - name: Download Linux arm32 deb package
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-arm32-deb-package
           path: release-assets
       - name: Download Linux arm32 rpm package
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-arm32-rpm-package
           path: release-assets
       - name: Download Linux arm64 AppImage
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-arm64-AppImage
           path: release-assets
       - name: Download Linux arm64 deb package
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-arm64-deb-package
           path: release-assets
       - name: Download Linux arm64 rpm package
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Linux-arm64-rpm-package
           path: release-assets
       - name: Download Windows MSI installer
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: Windows-Installer
           path: release-assets
       - name: Download macOS pkg installers
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: MacOS-Image
           path: release-assets
       - name: Upload all binaries to GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: release-assets/*
         env:
