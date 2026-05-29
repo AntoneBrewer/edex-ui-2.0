@@ -1,0 +1,99 @@
+div#mod_gpuTelemetry {
+    border-top: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    font-family: var(--font_main_light);
+    letter-spacing: 0.092vh;
+    padding: 0.645vh 0vh;
+    display: flex;
+}
+
+div#mod_gpuTelemetry::before {
+    content: "";
+    border-left: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    align-self: flex-start;
+    position: relative;
+    left: -0.092vh;
+    top: -1.111vh;
+    height: 0.833vh;
+}
+
+div#mod_gpuTelemetry::after {
+    content: "";
+    border-right: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    position: relative;
+    right: -0.092vh;
+    top: -1.111vh;
+    height: 0.833vh;
+}
+
+div#mod_gpuTelemetry > div#mod_gpuTelemetry_innercontainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+div#mod_gpuTelemetry_innercontainer > h1:first-child {
+    font-size: 1.48vh;
+    margin: 0vh;
+    width: 98%;
+    padding-left: 2%;
+    margin-bottom: -1.5vh;
+}
+
+div#mod_gpuTelemetry_innercontainer > h1:first-child > i {
+    font-style: normal;
+    font-size: 1.20vh;
+    opacity: 0.5;
+    text-align: right;
+    display: inline-block;
+    position: relative;
+    bottom: 1.9vh;
+    width: 100%;
+}
+
+div#mod_gpuTelemetry > div > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0.278vh 0vh;
+}
+
+div#mod_gpuTelemetry > div > div:last-child {
+    width: 95%;
+    border-top: 0.092vh dashed rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    padding-top: 0.838vh;
+}
+
+div#mod_gpuTelemetry > div > div:last-child > div {
+    width: 30%;
+    text-align: center;
+}
+
+div#mod_gpuTelemetry h1 {
+    font-size: 1.3vh;
+    line-height: 1.5vh;
+    margin: 0vh;
+}
+
+div#mod_gpuTelemetry em {
+    font-family: var(--font_main);
+    font-style: normal;
+}
+
+div#mod_gpuTelemetry i {
+    font-style: normal;
+    font-size: 1.3vh;
+    opacity: 0.6;
+    margin-top: 0.5vh;
+}
+
+div#mod_gpuTelemetry canvas {
+    width: 76%;
+    height: 3vh;
+    border-top: 0.092vh dashed rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    border-bottom: 0.092vh dashed rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    margin: 0.46vh 0vh;
+}
