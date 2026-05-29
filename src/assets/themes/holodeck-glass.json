@@ -1,0 +1,45 @@
+{
+    "colors": {
+        "r": 160,
+        "g": 230,
+        "b": 240,
+        "black": "#04101a",
+        "red": "#ff7588",
+        "green": "#7dffd0",
+        "yellow": "#ffe28a",
+        "blue": "#7ec6ff",
+        "magenta": "#d8a4ff",
+        "cyan": "#a0e6f0",
+        "white": "#e6f6ff",
+        "lightBlack": "#0e1b27",
+        "lightRed": "#ff97a8",
+        "lightGreen": "#a9ffe1",
+        "lightYellow": "#ffeeb0",
+        "lightBlue": "#a3d8ff",
+        "lightMagenta": "#e8c1ff",
+        "lightCyan": "#c6f1f7",
+        "lightWhite": "#f6fbff",
+        "light_black": "#081623",
+        "grey": "#23323f"
+    },
+    "cssvars": {
+        "font_main": "United Sans Medium",
+        "font_main_light": "United Sans Light"
+    },
+    "terminal": {
+        "fontFamily": "Fira Mono",
+        "cursorStyle": "bar",
+        "foreground": "#dff7ff",
+        "background": "rgba(8,22,35,0.55)",
+        "cursor": "#a0e6f0",
+        "cursorAccent": "#a0e6f0",
+        "selection": "rgba(160,230,240,0.25)"
+    },
+    "globe": {
+        "base": "#04101a",
+        "marker": "#a0e6f0",
+        "pin": "#dff7ff",
+        "satellite": "#7ec6ff"
+    },
+    "injectCSS": "body { background: radial-gradient(ellipse at center, #0a1a2c 0%, #02060a 100%) !important; } section.mod_column > div, #main_shell, #filesystem { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(10, 26, 44, 0.32) !important; border-radius: 6px; } section.mod_column > div { box-shadow: 0 0 14px rgba(160, 230, 240, 0.08); }"
+}

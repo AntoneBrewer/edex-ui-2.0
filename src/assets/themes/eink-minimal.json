@@ -1,0 +1,45 @@
+{
+    "colors": {
+        "r": 18,
+        "g": 18,
+        "b": 18,
+        "black": "#000000",
+        "red": "#3a3a3a",
+        "green": "#2a2a2a",
+        "yellow": "#5a5a5a",
+        "blue": "#1f1f1f",
+        "magenta": "#444444",
+        "cyan": "#333333",
+        "white": "#f5f5f0",
+        "lightBlack": "#1a1a1a",
+        "lightRed": "#555555",
+        "lightGreen": "#3f3f3f",
+        "lightYellow": "#737373",
+        "lightBlue": "#2a2a2a",
+        "lightMagenta": "#555555",
+        "lightCyan": "#444444",
+        "lightWhite": "#ffffff",
+        "light_black": "#ededea",
+        "grey": "#888881"
+    },
+    "cssvars": {
+        "font_main": "United Sans Medium",
+        "font_main_light": "United Sans Light"
+    },
+    "terminal": {
+        "fontFamily": "Fira Mono",
+        "cursorStyle": "block",
+        "foreground": "#0a0a0a",
+        "background": "#f5f5f0",
+        "cursor": "#0a0a0a",
+        "cursorAccent": "#f5f5f0",
+        "selection": "rgba(10, 10, 10, 0.18)"
+    },
+    "globe": {
+        "base": "#f5f5f0",
+        "marker": "#0a0a0a",
+        "pin": "#1a1a1a",
+        "satellite": "#444444"
+    },
+    "injectCSS": "body { background: #f5f5f0 !important; color: #0a0a0a; } section.mod_column > div { background: #ededea !important; }"
+}

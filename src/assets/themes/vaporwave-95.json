@@ -1,0 +1,45 @@
+{
+    "colors": {
+        "r": 255,
+        "g": 113,
+        "b": 206,
+        "black": "#1a0033",
+        "red": "#ff6188",
+        "green": "#a4ffce",
+        "yellow": "#fff85f",
+        "blue": "#5be9ff",
+        "magenta": "#ff71ce",
+        "cyan": "#01cdfe",
+        "white": "#f1f1f1",
+        "lightBlack": "#3a1565",
+        "lightRed": "#ff8aab",
+        "lightGreen": "#c7ffe2",
+        "lightYellow": "#fffb8a",
+        "lightBlue": "#8df1ff",
+        "lightMagenta": "#ff9adb",
+        "lightCyan": "#5cdcff",
+        "lightWhite": "#ffffff",
+        "light_black": "#220542",
+        "grey": "#553077"
+    },
+    "cssvars": {
+        "font_main": "United Sans Medium",
+        "font_main_light": "United Sans Light"
+    },
+    "terminal": {
+        "fontFamily": "Fira Mono",
+        "cursorStyle": "block",
+        "foreground": "#ff71ce",
+        "background": "#1a0033",
+        "cursor": "#01cdfe",
+        "cursorAccent": "#01cdfe",
+        "selection": "rgba(1, 205, 254, 0.35)"
+    },
+    "globe": {
+        "base": "#1a0033",
+        "marker": "#01cdfe",
+        "pin": "#ff71ce",
+        "satellite": "#fff85f"
+    },
+    "injectCSS": "body { background: linear-gradient(180deg, #1a0033 0%, #2a0a4a 50%, #1a0033 100%) !important; } section.mod_column > div { box-shadow: 0 0 12px rgba(255, 113, 206, 0.18); }"
+}
