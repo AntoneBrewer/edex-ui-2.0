@@ -431,6 +431,37 @@ async function initUI() {
     window.mods.globe = new LocationGlobe("mod_column_right");
     window.mods.conninfo = new Conninfo("mod_column_right");
 
+    // Optional widgets (toggled by layout/settings; instantiated up-front for visibility toggling)
+    try {
+        if (window.settings.gpuTelemetry !== false) {
+            window.mods.gpuTelemetry = new GPUTelemetry("mod_column_left");
+            if (!window.settings.gpuTelemetry) {
+                let el = document.getElementById("mod_gpuTelemetry");
+                if (el) el.style.display = "none";
+            }
+        }
+    } catch (e) { console.warn("GPU Telemetry init failed:", e); }
+    try {
+        if (window.settings.gitConstellation !== false) {
+            window.mods.gitConstellation = new GitConstellation("mod_column_right");
+        }
+    } catch (e) { console.warn("Git Constellation init failed:", e); }
+
+    // Init AI copilot panel (hidden until user opens it)
+    try {
+        window.aiCopilot = new AICopilot();
+    } catch (e) { console.warn("AI Copilot init failed:", e); }
+
+    // Layout manager
+    try {
+        window.layoutManager = new LayoutManager();
+        // Apply persisted layout if it isn't the default
+        if (window.settings.currentLayout && window.settings.currentLayout !== "default") {
+            // Defer to next tick so the widget DOM is ready
+            setTimeout(() => window.layoutManager.apply(window.settings.currentLayout), 800);
+        }
+    } catch (e) { console.warn("LayoutManager init failed:", e); }
+
     // Fade-in animations
     document.querySelectorAll(".mod_column").forEach(e => {
         e.setAttribute("class", "mod_column activated");
@@ -886,7 +917,9 @@ window.openShortcutsHelp = () => {
         "FS_DOTFILES": "Toggle hidden files and directories in the file browser.",
         "KB_PASSMODE": "Toggle the on-screen keyboard's \"Password Mode\", which allows you to safely<br>type sensitive information even if your screen might be recorded (disable visual input feedback).",
         "DEV_DEBUG": "Open Chromium Dev Tools, for debugging purposes.",
-        "DEV_RELOAD": "Trigger front-end hot reload."
+        "DEV_RELOAD": "Trigger front-end hot reload.",
+        "AI_TOGGLE": "Open or close the AI Copilot side panel.",
+        "LAYOUT_SWITCH": "Open the workspace layout picker to switch dashboard presets."
     };
 
     let appList = "";
@@ -1036,6 +1069,12 @@ window.useAppShortcut = action => {
             return true;
         case "DEV_RELOAD":
             window.location.reload(true);
+            return true;
+        case "AI_TOGGLE":
+            if (window.aiCopilot) window.aiCopilot.toggle();
+            return true;
+        case "LAYOUT_SWITCH":
+            if (window.layoutManager) window.layoutManager.openPicker();
             return true;
         default:
             console.warn(`Unknown "${action}" app shortcut action`);

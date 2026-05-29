@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src file: 'unsafe-inline'; img-src file: data:; media-src file:; connect-src ws: file:">
+        <meta http-equiv="Content-Security-Policy" content="default-src file: 'unsafe-inline'; img-src file: data:; media-src file:; connect-src ws: file: https://api.anthropic.com">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>eDEX-UI</title>
 
@@ -30,6 +30,10 @@
         <link rel="stylesheet" href="assets/css/mod_toplist.css" />
         <link rel="stylesheet" href="assets/css/mod_fuzzyFinder.css" />
         <link rel="stylesheet" href="assets/css/mod_processlist.css" />
+        <link rel="stylesheet" href="assets/css/mod_gpuTelemetry.css" />
+        <link rel="stylesheet" href="assets/css/mod_gitConstellation.css" />
+        <link rel="stylesheet" href="assets/css/mod_aiCopilot.css" />
+        <link rel="stylesheet" href="assets/css/mod_layouts.css" />
         <!-- Load extra CSS -->
         <link rel="stylesheet" href="assets/css/extra_ratios.css" />
 
@@ -54,6 +58,10 @@
         <script src="classes/ramwatcher.class.js"></script>
         <script src="classes/toplist.class.js"></script>
         <script src="classes/fuzzyFinder.class.js"></script>
+        <script src="classes/gpuTelemetry.class.js"></script>
+        <script src="classes/gitConstellation.class.js"></script>
+        <script src="classes/aiCopilot.class.js"></script>
+        <script src="classes/layoutManager.class.js"></script>
         <!-- Load extra classes -->
         <script src="classes/audiofx.class.js"></script>
     </head>
