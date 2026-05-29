@@ -202,6 +202,11 @@ class Terminal {
                     this.fit();
                 }
 
+                // AI Copilot terminal tap (no-op unless user enabled "Watch terminal")
+                if (window.aiCopilot && typeof window.aiCopilot.onTerminalChunk === "function") {
+                    try { window.aiCopilot.onTerminalChunk(e.data); } catch (err) {}
+                }
+
                 // See #397
                 if (!window.settings.experimentalGlobeFeatures) return;
                 let ips = e.data.match(/((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/g);
@@ -283,6 +288,9 @@ class Terminal {
 
             this.writelr = cmd => {
                 this.socket.send(cmd+"\r");
+                if (window.aiCopilot && typeof window.aiCopilot.onTerminalInput === "function") {
+                    try { window.aiCopilot.onTerminalInput(cmd); } catch (err) {}
+                }
             };
 
             this.clipboard = {

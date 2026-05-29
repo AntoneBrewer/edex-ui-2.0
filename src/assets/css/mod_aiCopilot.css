@@ -1,0 +1,232 @@
+section#ai_copilot {
+    position: fixed;
+    top: 4vh;
+    right: 0;
+    width: 32vw;
+    height: 92vh;
+    background: rgba(0, 0, 0, 0.92);
+    border-left: 0.18vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    border-top: 0.18vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    border-bottom: 0.18vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    box-shadow: -0.4vh 0 1.4vh rgba(var(--color_r), var(--color_g), var(--color_b), 0.15);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    font-family: var(--font_main_light);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: transform 0.32s cubic-bezier(.22,.61,.36,1);
+}
+
+section#ai_copilot.closed {
+    transform: translateX(102%);
+    pointer-events: none;
+}
+
+section#ai_copilot.open {
+    transform: translateX(0);
+}
+
+div#ai_copilot_tab {
+    position: fixed;
+    top: 40vh;
+    right: 0;
+    width: 2.6vh;
+    height: 8vh;
+    background: rgba(0, 0, 0, 0.85);
+    border-left: 0.18vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    border-top: 0.18vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    border-bottom: 0.18vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    font-family: var(--font_main);
+    letter-spacing: 0.2vh;
+    writing-mode: vertical-rl;
+    font-size: 1.4vh;
+    transition: background 0.2s;
+}
+
+div#ai_copilot_tab:hover {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.18);
+}
+
+div#ai_copilot_tab.hidden { display: none; }
+
+div#ai_copilot_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8vh 1.2vh;
+    border-bottom: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+}
+
+div#ai_copilot_header h3 {
+    margin: 0;
+    font-family: var(--font_main);
+    font-size: 1.6vh;
+    letter-spacing: 0.2vh;
+}
+
+button#ai_copilot_close {
+    background: transparent;
+    border: none;
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    font-size: 2.4vh;
+    cursor: pointer;
+    padding: 0 0.6vh;
+}
+
+div#ai_copilot_actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4vh;
+    padding: 0.8vh 1.2vh;
+    border-bottom: 0.092vh dashed rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+}
+
+div#ai_copilot_actions button {
+    background: transparent;
+    border: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    padding: 0.5vh 0.8vh;
+    font-family: var(--font_main);
+    font-size: 1.1vh;
+    letter-spacing: 0.15vh;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+div#ai_copilot_actions button:hover {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.18);
+}
+
+label.ai_copilot_watch {
+    display: flex;
+    align-items: center;
+    gap: 0.4vh;
+    font-size: 1.1vh;
+    opacity: 0.75;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+div#ai_copilot_messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.8vh 1.2vh;
+    font-size: 1.3vh;
+}
+
+div.ai_msg {
+    margin-bottom: 1vh;
+    padding-bottom: 0.6vh;
+    border-bottom: 0.092vh dotted rgba(var(--color_r), var(--color_g), var(--color_b), 0.2);
+}
+
+span.ai_msg_role {
+    display: block;
+    font-family: var(--font_main);
+    font-size: 1vh;
+    letter-spacing: 0.2vh;
+    opacity: 0.6;
+    margin-bottom: 0.3vh;
+}
+
+div.ai_msg_body {
+    white-space: pre-wrap;
+    line-height: 1.55;
+}
+
+div.ai_msg_you { opacity: 0.85; }
+div.ai_msg_ai { color: rgb(var(--color_r), var(--color_g), var(--color_b)); }
+div.ai_msg_error { color: var(--color_red, #ff5566); }
+div.ai_msg_cmd { background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.06); padding: 0.6vh 0.8vh; }
+
+pre.ai_cmd_pre {
+    font-family: var(--font_mono);
+    font-size: 1.3vh;
+    margin: 0.4vh 0;
+    padding: 0.6vh;
+    background: #000;
+    border: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.4);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+div.ai_cmd_buttons {
+    display: flex;
+    gap: 0.4vh;
+    margin-top: 0.4vh;
+}
+
+div.ai_cmd_buttons button {
+    background: transparent;
+    border: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    padding: 0.4vh 0.8vh;
+    font-family: var(--font_main);
+    font-size: 1vh;
+    letter-spacing: 0.15vh;
+    cursor: pointer;
+}
+
+div.ai_cmd_buttons button.ai_cmd_run {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.25);
+}
+
+div.ai_cmd_buttons button:hover {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.4);
+}
+
+div#ai_copilot_input {
+    display: flex;
+    padding: 0.8vh 1.2vh;
+    border-top: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    gap: 0.4vh;
+}
+
+input#ai_copilot_query {
+    flex: 1;
+    background: #000;
+    border: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.4);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    padding: 0.6vh 0.8vh;
+    font-family: var(--font_mono);
+    font-size: 1.3vh;
+    outline: none;
+}
+
+button#ai_copilot_send {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.25);
+    border: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.6);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    padding: 0 1.2vh;
+    cursor: pointer;
+    font-family: var(--font_main);
+    letter-spacing: 0.2vh;
+    font-size: 1.2vh;
+}
+
+div#ai_copilot_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6vh 1.2vh;
+    border-top: 0.092vh dashed rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    font-size: 1.05vh;
+    opacity: 0.7;
+}
+
+button#ai_copilot_setup {
+    background: transparent;
+    border: none;
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    font-family: var(--font_main_light);
+    font-size: 1.1vh;
+    cursor: pointer;
+    text-decoration: underline;
+}
