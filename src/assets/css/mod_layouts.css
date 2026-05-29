@@ -1,0 +1,42 @@
+div#layout_picker {
+    padding: 0.5vh 0;
+}
+
+div#layout_pick_list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6vh;
+}
+
+button.layout_pick_item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.4);
+    color: rgb(var(--color_r), var(--color_g), var(--color_b));
+    padding: 1vh 1.2vh;
+    font-family: var(--font_main);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+button.layout_pick_item:hover {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.12);
+}
+
+button.layout_pick_item.active {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.22);
+    border-color: rgb(var(--color_r), var(--color_g), var(--color_b));
+}
+
+span.layout_pick_name {
+    font-size: 1.6vh;
+    letter-spacing: 0.25vh;
+}
+
+span.layout_pick_meta {
+    font-size: 1.1vh;
+    opacity: 0.6;
+    font-family: var(--font_main_light);
+}

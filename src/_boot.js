@@ -93,7 +93,10 @@ if (!fs.existsSync(settingsFile)) {
         hideDotfiles: false,
         fsListView: false,
         experimentalGlobeFeatures: false,
-        experimentalFeatures: false
+        experimentalFeatures: false,
+        gpuTelemetry: false,
+        gitConstellation: true,
+        currentLayout: "default"
     }, "", 4));
     signale.info(`Default settings written to ${settingsFile}`);
 }
@@ -113,6 +116,8 @@ if (!fs.existsSync(shortcutsFile)) {
         { type: "app", trigger: "Ctrl+Shift+P", action: "KB_PASSMODE", enabled: true },
         { type: "app", trigger: "Ctrl+Shift+I", action: "DEV_DEBUG", enabled: false },
         { type: "app", trigger: "Ctrl+Shift+F5", action: "DEV_RELOAD", enabled: true },
+        { type: "app", trigger: "Ctrl+Shift+A", action: "AI_TOGGLE", enabled: true },
+        { type: "app", trigger: "Ctrl+Shift+W", action: "LAYOUT_SWITCH", enabled: true },
         { type: "shell", trigger: "Ctrl+Shift+Alt+Space", action: "neofetch", linebreak: true, enabled: false }
     ], "", 4));
     signale.info(`Default keymap written to ${shortcutsFile}`);
