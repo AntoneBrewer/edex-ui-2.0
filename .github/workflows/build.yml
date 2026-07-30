@@ -111,7 +111,7 @@ jobs:
     container: fedora:latest
     steps:
       - name: Install system dependencies
-        run: dnf install --assumeyes git gcc-c++ make python3 rpm-build rsync
+        run: dnf install --assumeyes git gcc-c++ make python3 rpm-build rsync libxcrypt-compat
 
       - name: Check out repository
         uses: actions/checkout@v4
