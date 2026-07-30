@@ -59,7 +59,7 @@ if (remote.process.argv.includes("--nointro")) {
 } else {
     window.settings.nointroOverride = false;
 }
-if (electron.remote.process.argv.includes("--nocursor")) {
+if (remote.process.argv.includes("--nocursor")) {
     window.settings.nocursorOverride = true;
 } else {
     window.settings.nocursorOverride = false;
@@ -204,7 +204,7 @@ function initSystemInformationProxy() {
 window.audioManager = new AudioManager();
 
 // See #223
-electron.remote.app.focus();
+remote.app.focus();
 
 let i = 0;
 if (window.settings.nointro || window.settings.nointroOverride) {
@@ -243,7 +243,7 @@ function displayLine() {
 
     switch(true) {
         case i === 2:
-            bootScreen.innerHTML += `eDEX-UI Kernel version ${electron.remote.app.getVersion()} boot at ${Date().toString()}; root:xnu-1699.22.73~1/RELEASE_X86_64`;
+            bootScreen.innerHTML += `eDEX-UI Kernel version ${remote.app.getVersion()} boot at ${Date().toString()}; root:xnu-1699.22.73~1/RELEASE_X86_64`;
         case i === 4:
             setTimeout(displayLine, 500);
             break;
@@ -334,7 +334,7 @@ async function getDisplayName() {
         return user;
 
     try {
-        user = await require("username")();
+        user = await require("username").username();
     } catch (e) {}
 
     return user;
@@ -345,7 +345,7 @@ async function initUI() {
     document.body.innerHTML += `<section class="mod_column" id="mod_column_left">
         <h3 class="title"><p>PANEL</p><p>SYSTEM</p></h3>
     </section>
-    <section id="main_shell" style="height:0%;width:0%;opacity:0;margin-bottom:30vh;" augmented-ui="bl-clip tr-clip exe">
+    <section id="main_shell" style="height:0%;width:0%;opacity:0;margin-bottom:30vh;" data-augmented-ui="bl-clip tr-clip border">
         <h3 class="title" style="opacity:0;"><p>TERMINAL</p><p>MAIN SHELL</p></h3>
         <h1 id="main_shell_greeting"></h1>
     </section>
@@ -514,7 +514,7 @@ async function initUI() {
     window.onmouseup = e => {
         if (window.keyboard.linkedToTerm) window.term[window.currentTerm].term.focus();
     };
-    window.term[0].term.writeln("\033[1m"+`Welcome to eDEX-UI v${electron.remote.app.getVersion()} - Electron v${process.versions.electron}`+"\033[0m");
+    window.term[0].term.writeln("\033[1m"+`Welcome to eDEX-UI v${remote.app.getVersion()} - Electron v${process.versions.electron}`+"\033[0m");
 
     await _delay(100);
 
@@ -630,7 +630,7 @@ window.openSettings = async () => {
         if (th === window.settings.theme) return;
         themes += `<option>${th}</option>`;
     });
-    for (let i = 0; i < electron.remote.screen.getAllDisplays().length; i++) {
+    for (let i = 0; i < remote.screen.getAllDisplays().length; i++) {
         if (i !== window.settings.monitor) monitors += `<option>${i}</option>`;
     }
     let nets = await window.si.networkInterfaces();
@@ -643,7 +643,7 @@ window.openSettings = async () => {
 
     new Modal({
         type: "custom",
-        title: `Settings <i>(v${electron.remote.app.getVersion()})</i>`,
+        title: `Settings <i>(v${remote.app.getVersion()})</i>`,
         html: `<table id="settingsEditor">
                     <tr>
                         <th>Key</th>
@@ -829,7 +829,7 @@ window.openSettings = async () => {
             {label: "Open in External Editor", action:`electron.shell.openPath('${settingsFile}');electronWin.minimize();`},
             {label: "Save to Disk", action: "window.writeSettingsFile()"},
             {label: "Reload UI", action: "window.location.reload(true);"},
-            {label: "Restart eDEX", action: "electron.remote.app.relaunch();electron.remote.app.quit();"}
+            {label: "Restart eDEX", action: "remote.app.relaunch();remote.app.quit();"}
         ]
     }, () => {
         // Link the keyboard back to the terminal
@@ -945,7 +945,7 @@ window.openShortcutsHelp = () => {
     window.keyboard.detach();
     new Modal({
         type: "custom",
-        title: `Available Keyboard Shortcuts <i>(v${electron.remote.app.getVersion()})</i>`,
+        title: `Available Keyboard Shortcuts <i>(v${remote.app.getVersion()})</i>`,
         html: `<h5>Using either the on-screen or a physical keyboard, you can use the following shortcuts:</h5>
                 <details open id="shortcutsHelpAccordeon1">
                     <summary>Emulator shortcuts</summary>
@@ -1061,7 +1061,7 @@ window.useAppShortcut = action => {
             window.keyboard.togglePasswordMode();
             return true;
         case "DEV_DEBUG":
-            electron.remote.getCurrentWindow().webContents.toggleDevTools();
+            remote.getCurrentWindow().webContents.toggleDevTools();
             return true;
         case "DEV_RELOAD":
             window.location.reload(true);
@@ -1079,7 +1079,7 @@ window.useAppShortcut = action => {
 };
 
 // Global keyboard shortcuts
-const globalShortcut = electron.remote.globalShortcut;
+const globalShortcut = remote.globalShortcut;
 globalShortcut.unregisterAll();
 
 window.registerKeyboardShortcuts = () => {
@@ -1141,7 +1141,7 @@ document.addEventListener("keydown", e => {
 // Fix #265
 window.addEventListener("keyup", e => {
     if (require("os").platform() === "win32" && e.key === "F4" && e.altKey === true) {
-        electron.remote.app.quit();
+        remote.app.quit();
     }
 });
 
@@ -1159,12 +1159,12 @@ window.onresize = () => {
 
 // See #413
 window.resizeTimeout = null;
-let electronWin = electron.remote.getCurrentWindow();
+let electronWin = remote.getCurrentWindow();
 electronWin.on("resize", () => {
     if (settings.keepGeometry === false) return;
     clearTimeout(window.resizeTimeout);
     window.resizeTimeout = setTimeout(() => {
-        let win = electron.remote.getCurrentWindow();
+        let win = remote.getCurrentWindow();
         if (win.isFullScreen()) return false;
         if (win.isMaximized()) {
             win.unmaximize();
@@ -1183,5 +1183,5 @@ electronWin.on("resize", () => {
 });
 
 electronWin.on("leave-full-screen", () => {
-    electron.remote.getCurrentWindow().setSize(960, 540);
+    remote.getCurrentWindow().setSize(960, 540);
 });

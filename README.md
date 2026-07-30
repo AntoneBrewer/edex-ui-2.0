@@ -76,30 +76,41 @@ It's a real, fully functional terminal. It runs your actual shell. It monitors y
 
 > Pick your flavor. We got 'em all now. 🎉
 
-### 🪟 Windows
+### Android
 | Package | Architecture |
 |---------|-------------|
-| [eDEX-UI-Windows-x64.exe](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | 64-bit installer |
+| [eDEX-UI-Android-arm64.apk](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | ARM64 |
+| [eDEX-UI-Android-x64.apk](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | x64 |
 
-### 🍎 macOS
+> Android uses a Capacitor interface. Electron-only terminal and hardware telemetry features remain available in the desktop packages.
+
+### Fedora
 | Package | Architecture |
 |---------|-------------|
-| [eDEX-UI-macOS-x64.dmg](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | Intel |
-| [eDEX-UI-macOS-arm64.dmg](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | Apple Silicon (M1/M2/M3) 🍏 |
+| [eDEX-UI-Fedora-arm64.rpm](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | ARM64 |
+| [eDEX-UI-Fedora-x64.rpm](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | x64 |
 
-### 🐧 Linux
+### macOS
+| Package | Architecture |
+|---------|-------------|
+| [eDEX-UI-macOS-arm64.pkg](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | Apple Silicon ARM64 |
+| [eDEX-UI-macOS-x64.pkg](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | Intel x64 |
+
+### Ubuntu
 | Package | Format | Architecture |
 |---------|--------|-------------|
-| [eDEX-UI.AppImage](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | AppImage | x86_64 |
-| [eDEX-UI.deb](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | Debian/Ubuntu | x86_64 |
-| [eDEX-UI.rpm](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | Fedora/RHEL | x86_64 |
-| [eDEX-UI-arm64.AppImage](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | AppImage | ARM64 |
-| [eDEX-UI-armv7l.AppImage](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | AppImage | ARMv7 🥧 |
+| [eDEX-UI-Ubuntu-arm64.AppImage](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | AppImage | ARM64 |
+| [eDEX-UI-Ubuntu-arm64.deb](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | DEB | ARM64 |
+| [eDEX-UI-Ubuntu-x64.AppImage](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | AppImage | x64 |
+| [eDEX-UI-Ubuntu-x64.deb](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | DEB | x64 |
 
-> 🐧 **Linux users:** Don't forget to `chmod +x` your AppImage before running it!
-> ```bash
-> chmod +x eDEX-UI.AppImage && ./eDEX-UI.AppImage
-> ```
+> Ubuntu AppImages must be executable: `chmod +x eDEX-UI-Ubuntu-*.AppImage`.
+
+### Windows
+| Package | Architecture |
+|---------|-------------|
+| [eDEX-UI-Windows-arm64-Setup.exe](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | ARM64 |
+| [eDEX-UI-Windows-x64-Setup.exe](https://github.com/AntoneBrewer/edex-ui-2.0/releases/latest) | x64 |
 
 ---
 
@@ -113,7 +124,7 @@ Grab a binary from the [Releases page](https://github.com/AntoneBrewer/edex-ui-2
 > For the brave souls who like to compile things themselves 💪
 
 **Prerequisites:**
-- [Node.js](https://nodejs.org/) (v16+)
+- [Node.js](https://nodejs.org/) (v22+)
 - npm
 
 ```bash
@@ -131,6 +142,8 @@ npm start
 npm run build-linux    # 🐧 Linux
 npm run build-windows  # 🪟 Windows
 npm run build-darwin   # 🍎 macOS
+npm run android:sync   # Android (then build from android/)
+cd android && ./gradlew assembleDebug
 ```
 
 Binaries will land in the `dist/` folder. Ship it! 🚢

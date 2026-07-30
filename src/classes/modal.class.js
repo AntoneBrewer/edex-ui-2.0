@@ -7,7 +7,7 @@ class Modal {
         this.type = options.type;
         this.id = require("nanoid").nanoid();
         while (typeof window.modals[this.id] !== "undefined") {
-            this.id = require("nanoid")();
+            this.id = require("nanoid").nanoid();
         }
         this.title = options.title || options.type || "Modal window";
         this.message = options.message || "Lorem ipsum dolor sit amet.";
@@ -48,7 +48,7 @@ class Modal {
                 break;
         }
 
-        let DOMstring = `<div id="modal_${this.id}" class="${this.classes}" style="z-index:${zindex+Object.keys(window.modals).length};" augmented-ui="${augs.join(" ")} exe">
+        let DOMstring = `<div id="modal_${this.id}" class="${this.classes}" style="z-index:${zindex+Object.keys(window.modals).length};" data-augmented-ui="${augs.join(" ")} border">
             <h1>${this.title}</h1>
             ${this.type === "custom" ? options.html : "<h5>"+this.message+"</h5>"}
             <div>`;

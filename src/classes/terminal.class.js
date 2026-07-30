@@ -3,11 +3,11 @@ class Terminal {
         if (opts.role === "client") {
             if (!opts.parentId) throw "Missing options";
 
-            this.xTerm = require("xterm").Terminal;
-            const {AttachAddon} = require("xterm-addon-attach");
-            const {FitAddon} = require("xterm-addon-fit");
-            const {LigaturesAddon} = require("xterm-addon-ligatures");
-            const {WebglAddon} = require("xterm-addon-webgl");
+            this.xTerm = require("@xterm/xterm").Terminal;
+            const {AttachAddon} = require("@xterm/addon-attach");
+            const {FitAddon} = require("@xterm/addon-fit");
+            const {LigaturesAddon} = require("@xterm/addon-ligatures/lib/addon-ligatures.mjs");
+            const {WebglAddon} = require("@xterm/addon-webgl");
             this.Ipc = require("electron").ipcRenderer;
 
             this.port = opts.port || 3000;
@@ -72,7 +72,7 @@ class Terminal {
                 });
             }
 
-            let color = require("color");
+            let color = require("color").default;
             let colorify;
             if (doCustomFilter) {
                 colorify = (base, target) => {
@@ -98,6 +98,7 @@ class Terminal {
             let themeColor = `rgb(${window.theme.r}, ${window.theme.g}, ${window.theme.b})`;
 
             this.term = new this.xTerm({
+                allowProposedApi: true,
                 cols: 80,
                 rows: 24,
                 cursorBlink: window.theme.terminal.cursorBlink || true,

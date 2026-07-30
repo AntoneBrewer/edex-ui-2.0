@@ -1,0 +1,8 @@
+{
+  "appId": "com.edex.ui",
+  "appName": "eDEX-UI",
+  "webDir": "mobile",
+  "android": {
+    "backgroundColor": "#000000"
+  }
+}
