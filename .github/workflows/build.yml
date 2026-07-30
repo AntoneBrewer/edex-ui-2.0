@@ -1,0 +1,178 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22"
+
+jobs:
+  macos:
+    name: macOS ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: macos-15-intel
+          - arch: arm64
+            runner: macos-latest
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare application
+        run: npm run prebuild-darwin
+
+      - name: Build macOS package
+        run: npx electron-builder --mac pkg --${{ matrix.arch }} --publish never
+
+      - name: Upload macOS package
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ matrix.arch }}
+          path: dist/*.pkg
+          if-no-files-found: error
+
+  ubuntu:
+    name: Ubuntu ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes fakeroot rpm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare application
+        run: npm run prebuild-linux
+
+      - name: Build Ubuntu packages
+        run: npx electron-builder --linux AppImage deb --${{ matrix.arch }} --publish never
+
+      - name: Upload Ubuntu packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubuntu-${{ matrix.arch }}
+          path: |
+            dist/*.AppImage
+            dist/*.deb
+          if-no-files-found: error
+
+  fedora:
+    name: Fedora ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: ubuntu-latest
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    container: fedora:latest
+    steps:
+      - name: Install system dependencies
+        run: dnf install --assumeyes git gcc-c++ make python3 rpm-build rsync
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare application
+        run: npm run prebuild-linux
+
+      - name: Build Fedora package
+        run: npx electron-builder --linux rpm --${{ matrix.arch }} --publish never
+
+      - name: Upload Fedora package
+        uses: actions/upload-artifact@v4
+        with:
+          name: fedora-${{ matrix.arch }}
+          path: dist/*.rpm
+          if-no-files-found: error
+
+  windows:
+    name: Windows ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: windows-latest
+          - arch: arm64
+            runner: windows-11-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare application
+        run: npm run prebuild-windows
+
+      - name: Build Windows installers
+        run: npx electron-builder --win nsis msi --${{ matrix.arch }} --publish never
+
+      - name: Upload Windows installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-${{ matrix.arch }}
+          path: |
+            dist/*.exe
+            dist/*.msi
+          if-no-files-found: error
