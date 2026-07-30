@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#000000" />
+    <title>eDEX-UI</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Courier New", monospace;
+        --accent: #00fff2;
+        --panel: rgba(0, 255, 242, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        align-items: center;
+        background:
+          linear-gradient(rgba(0, 255, 242, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 255, 242, 0.04) 1px, transparent 1px),
+          #000;
+        background-size: 24px 24px;
+        color: var(--accent);
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+        padding: max(24px, env(safe-area-inset-top)) 24px
+          max(24px, env(safe-area-inset-bottom));
+      }
+
+      main {
+        border: 1px solid var(--accent);
+        box-shadow: 0 0 24px rgba(0, 255, 242, 0.2);
+        max-width: 680px;
+        padding: clamp(24px, 6vw, 48px);
+        width: 100%;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 10vw, 4rem);
+        letter-spacing: 0.12em;
+        margin: 0 0 8px;
+      }
+
+      .platform {
+        border-bottom: 1px solid var(--accent);
+        letter-spacing: 0.3em;
+        margin-bottom: 32px;
+        opacity: 0.7;
+        padding-bottom: 16px;
+        text-transform: uppercase;
+      }
+
+      .status {
+        background: var(--panel);
+        border-left: 4px solid var(--accent);
+        line-height: 1.6;
+        padding: 16px;
+      }
+
+      dl {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: auto 1fr;
+        margin: 32px 0 0;
+      }
+
+      dt {
+        opacity: 0.65;
+      }
+
+      dd {
+        margin: 0;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>eDEX-UI</h1>
+      <div class="platform">Android interface</div>
+      <p class="status">
+        Mobile runtime online. Desktop terminal and hardware telemetry require
+        the Electron desktop builds.
+      </p>
+      <dl>
+        <dt>Architecture</dt>
+        <dd id="architecture">Detecting</dd>
+        <dt>Platform</dt>
+        <dd>Android</dd>
+        <dt>Status</dt>
+        <dd>Ready</dd>
+      </dl>
+    </main>
+    <script>
+      document.getElementById("architecture").textContent =
+        navigator.userAgent.includes("x86_64") ? "x64" : "ARM64";
+    </script>
+  </body>
+</html>

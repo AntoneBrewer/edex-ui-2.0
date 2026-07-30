@@ -2,8 +2,16 @@ name: Build
 
 on:
   push:
+    branches:
+      - "**"
   pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to build
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -16,20 +24,124 @@ env:
   NODE_VERSION: "22"
 
 jobs:
+  android:
+    name: Android ARM64 and x64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Synchronize Android project
+        run: npm run android:sync
+
+      - name: Build Android APKs
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug
+
+      - name: Name Android packages
+        run: |
+          mkdir -p artifacts
+          find android/app/build/outputs/apk -name "*arm64-v8a*debug*.apk" -exec cp {} artifacts/eDEX-UI-Android-arm64.apk \;
+          find android/app/build/outputs/apk -name "*x86_64*debug*.apk" -exec cp {} artifacts/eDEX-UI-Android-x64.apk \;
+
+      - name: Upload Android ARM64 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-arm64
+          path: artifacts/eDEX-UI-Android-arm64.apk
+          if-no-files-found: error
+
+      - name: Upload Android x64 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-x64
+          path: artifacts/eDEX-UI-Android-x64.apk
+          if-no-files-found: error
+
+  fedora:
+    name: Fedora ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+          - arch: x64
+            runner: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes rpm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare application
+        run: npm run prebuild-linux
+
+      - name: Build Fedora package
+        run: npx electron-builder --linux rpm --${{ matrix.arch }} --publish never
+
+      - name: Upload Fedora package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fedora-${{ matrix.arch }}
+          path: dist/*.rpm
+          if-no-files-found: error
+
   macos:
     name: macOS ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - arch: x64
-            runner: macos-15-intel
           - arch: arm64
             runner: macos-latest
+          - arch: x64
+            runner: macos-15-intel
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -49,7 +161,7 @@ jobs:
       - name: Upload macOS package
         uses: actions/upload-artifact@v4
         with:
-          name: macos-${{ matrix.arch }}
+          name: macOS-${{ matrix.arch }}
           path: dist/*.pkg
           if-no-files-found: error
 
@@ -59,14 +171,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: x64
-            runner: ubuntu-latest
           - arch: arm64
             runner: ubuntu-24.04-arm
+          - arch: x64
+            runner: ubuntu-latest
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -77,7 +191,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --yes fakeroot rpm
+          sudo apt-get install --yes fakeroot
 
       - name: Install dependencies
         run: npm ci
@@ -91,51 +205,10 @@ jobs:
       - name: Upload Ubuntu packages
         uses: actions/upload-artifact@v4
         with:
-          name: ubuntu-${{ matrix.arch }}
+          name: Ubuntu-${{ matrix.arch }}
           path: |
             dist/*.AppImage
             dist/*.deb
-          if-no-files-found: error
-
-  fedora:
-    name: Fedora ${{ matrix.arch }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: x64
-            runner: ubuntu-latest
-          - arch: arm64
-            runner: ubuntu-24.04-arm
-    runs-on: ${{ matrix.runner }}
-    container: fedora:latest
-    steps:
-      - name: Install system dependencies
-        run: dnf install --assumeyes git gcc-c++ make python3 rpm-build rsync libxcrypt-compat
-
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Prepare application
-        run: npm run prebuild-linux
-
-      - name: Build Fedora package
-        run: npx electron-builder --linux rpm --${{ matrix.arch }} --publish never
-
-      - name: Upload Fedora package
-        uses: actions/upload-artifact@v4
-        with:
-          name: fedora-${{ matrix.arch }}
-          path: dist/*.rpm
           if-no-files-found: error
 
   windows:
@@ -144,14 +217,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: x64
-            runner: windows-2022
           - arch: arm64
             runner: windows-11-arm
+          - arch: x64
+            runner: windows-2022
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -171,7 +246,7 @@ jobs:
       - name: Upload Windows installers
         uses: actions/upload-artifact@v4
         with:
-          name: windows-${{ matrix.arch }}
+          name: Windows-${{ matrix.arch }}
           path: |
             dist/*.exe
             dist/*.msi
