@@ -142,7 +142,7 @@ jobs:
       matrix:
         include:
           - arch: x64
-            runner: windows-latest
+            runner: windows-2022
           - arch: arm64
             runner: windows-11-arm
     runs-on: ${{ matrix.runner }}
