@@ -115,7 +115,13 @@ class GitConstellation {
         this.commits = [];
         if (log) {
             log.split("\n").filter(l => l.length).forEach(line => {
-                let [sha, shortSha, parents, subject, author, ts] = line.split("|");
+                let parts = line.split("|");
+                let sha = parts.shift();
+                let shortSha = parts.shift();
+                let parents = parts.shift();
+                let ts = parts.pop();
+                let author = parts.pop();
+                let subject = parts.join("|");
                 this.commits.push({
                     sha,
                     shortSha,
