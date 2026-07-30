@@ -433,12 +433,8 @@ async function initUI() {
 
     // Optional widgets (toggled by layout/settings; instantiated up-front for visibility toggling)
     try {
-        if (window.settings.gpuTelemetry !== false) {
+        if (window.settings.gpuTelemetry === true) {
             window.mods.gpuTelemetry = new GPUTelemetry("mod_column_left");
-            if (!window.settings.gpuTelemetry) {
-                let el = document.getElementById("mod_gpuTelemetry");
-                if (el) el.style.display = "none";
-            }
         }
     } catch (e) { console.warn("GPU Telemetry init failed:", e); }
     try {
